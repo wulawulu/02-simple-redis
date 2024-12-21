@@ -78,6 +78,7 @@ pub struct HSet {
 #[derive(Debug)]
 pub struct HGetAll {
     pub key: String,
+    pub sort: bool,
 }
 
 impl TryFrom<RespFrame> for Command {
