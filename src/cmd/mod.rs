@@ -5,7 +5,9 @@ use enum_dispatch::enum_dispatch;
 use lazy_static::lazy_static;
 use thiserror::Error;
 
-use crate::{backend::Backend, RespArray, RespError, RespFrame, SimpleString};
+use crate::RespArray;
+use crate::SimpleString;
+use crate::{backend::Backend, RespError, RespFrame};
 
 lazy_static! {
     static ref RESP_OK: RespFrame = SimpleString::from("OK").into();
@@ -150,9 +152,10 @@ fn extract_args(frames: RespArray, start: usize) -> Result<Vec<RespFrame>, Comma
 
 #[cfg(test)]
 mod tests {
-    use crate::{RespDecode, RespNull};
+    use crate::RespDecode;
 
     use super::*;
+    use crate::RespNull;
     use anyhow::Result;
     use bytes::BytesMut;
 

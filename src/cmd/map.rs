@@ -1,6 +1,7 @@
-use crate::{backend::Backend, RespArray, RespFrame, RespNull};
-
 use super::{extract_args, validate_command, CommandError, CommandExecutor, Get, Set, RESP_OK};
+use crate::RespArray;
+use crate::RespNull;
+use crate::{backend::Backend, RespFrame};
 
 impl CommandExecutor for Get {
     fn execute(self, backend: &Backend) -> RespFrame {

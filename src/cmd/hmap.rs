@@ -1,14 +1,13 @@
-use crate::{backend::Backend, RespArray, RespFrame, RespMap};
-
 use super::{
     extract_args, validate_command, CommandError, CommandExecutor, HGet, HGetAll, HSet, RESP_OK,
 };
+use crate::{backend::Backend, RespArray, RespFrame, RespMap, RespNull};
 
 impl CommandExecutor for HGet {
     fn execute(self, backend: &Backend) -> RespFrame {
         match backend.hget(&self.key, &self.field) {
             Some(value) => value,
-            None => RespFrame::Null(crate::RespNull),
+            None => RespFrame::Null(RespNull),
         }
     }
 }
