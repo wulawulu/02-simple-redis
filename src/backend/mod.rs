@@ -1,4 +1,4 @@
-use crate::RespFrame;
+use crate::{RespArray, RespFrame, RespNull};
 use dashmap::DashMap;
 use std::{ops::Deref, sync::Arc};
 
@@ -52,6 +52,14 @@ impl Backend {
         self.hmap
             .get(key)
             .and_then(|v| v.get(field).map(|v| v.value().clone()))
+    }
+
+    pub fn hmget(&self, key: &str, field: Vec<String>) -> RespFrame {
+        let data = field
+            .into_iter()
+            .map(|f| self.hget(key, &f).unwrap_or(RespFrame::Null(RespNull)))
+            .collect::<Vec<RespFrame>>();
+        RespArray::new(data).into()
     }
 
     pub fn hset(&self, key: String, field: String, value: RespFrame) {

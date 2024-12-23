@@ -1,3 +1,4 @@
+mod echo;
 mod hmap;
 mod map;
 
@@ -37,9 +38,16 @@ pub enum Command {
     Get(Get),
     Set(Set),
     HGet(HGet),
+    HMGet(HMGet),
     HSet(HSet),
     HGetAll(HGetAll),
     Unrecognized(Unrecognized),
+    Echo(Echo),
+}
+
+#[derive(Debug)]
+pub struct Echo {
+    pub message: String,
 }
 
 #[derive(Debug)]
@@ -66,6 +74,12 @@ pub struct Set {
 pub struct HGet {
     pub key: String,
     pub field: String,
+}
+
+#[derive(Debug)]
+pub struct HMGet {
+    pub key: String,
+    pub fields: Vec<String>,
 }
 
 #[derive(Debug)]
@@ -100,9 +114,11 @@ impl TryFrom<RespArray> for Command {
     fn try_from(value: RespArray) -> Result<Self, Self::Error> {
         match value.first() {
             Some(RespFrame::BulkString(ref cmd)) => match cmd.as_ref() {
+                b"echo" => Ok(Echo::try_from(value)?.into()),
                 b"get" => Ok(Get::try_from(value)?.into()),
                 b"set" => Ok(Set::try_from(value)?.into()),
                 b"hget" => Ok(HGet::try_from(value)?.into()),
+                b"hmget" => Ok(HMGet::try_from(value)?.into()),
                 b"hset" => Ok(HSet::try_from(value)?.into()),
                 b"hgetall" => Ok(HGetAll::try_from(value)?.into()),
                 _ => Ok(Unrecognized.into()),
@@ -119,9 +135,9 @@ fn validate_command(
     cmds: &[&'static str],
     arg_cnt: usize,
 ) -> Result<(), CommandError> {
-    if frames.len() != cmds.len() + arg_cnt {
+    if frames.len() < cmds.len() + arg_cnt {
         return Err(CommandError::InvalidCommand(format!(
-            "{} command must have exactly {} argument",
+            "{} command must have at least {} argument",
             cmds.join(" "),
             arg_cnt
         )));

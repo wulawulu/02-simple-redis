@@ -1,5 +1,6 @@
 use super::{
-    extract_args, validate_command, CommandError, CommandExecutor, HGet, HGetAll, HSet, RESP_OK,
+    extract_args, validate_command, CommandError, CommandExecutor, HGet, HGetAll, HMGet, HSet,
+    RESP_OK,
 };
 use crate::{backend::Backend, BulkString, RespArray, RespFrame, RespNull};
 
@@ -9,6 +10,12 @@ impl CommandExecutor for HGet {
             Some(value) => value,
             None => RespFrame::Null(RespNull),
         }
+    }
+}
+
+impl CommandExecutor for HMGet {
+    fn execute(self, backend: &Backend) -> RespFrame {
+        backend.hmget(&self.key, self.fields)
     }
 }
 
@@ -61,6 +68,40 @@ impl TryFrom<RespArray> for HGet {
                 "Invalid key or field".to_string(),
             )),
         }
+    }
+}
+
+impl TryFrom<RespArray> for HMGet {
+    type Error = CommandError;
+
+    fn try_from(value: RespArray) -> Result<Self, Self::Error> {
+        // 验证命令格式，至少需要一个key和一个field
+        validate_command(&value, &["hmget"], 2)?;
+
+        let mut args = extract_args(value, 1)?;
+        if args.len() < 2 {
+            return Err(CommandError::InvalidArgument(
+                "HMGET command must have at least 2 arguments".to_string(),
+            ));
+        }
+        let key = parse_string_arg(args.remove(0), "key")?;
+
+        let fields = args
+            .into_iter()
+            .enumerate()
+            .map(|(i, frame)| parse_string_arg(frame, &format!("field {}", i + 1)))
+            .collect::<Result<Vec<_>, _>>()?;
+        Ok(Self { key, fields })
+    }
+}
+
+fn parse_string_arg(frames: RespFrame, arg_name: &str) -> Result<String, CommandError> {
+    match frames {
+        RespFrame::BulkString(bytes) => Ok(String::from_utf8(bytes.0)?),
+        _ => Err(CommandError::InvalidArgument(format!(
+            "Invalid {} argument",
+            arg_name
+        ))),
     }
 }
 
