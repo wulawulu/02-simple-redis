@@ -1,6 +1,7 @@
 mod echo;
 mod hmap;
 mod map;
+mod set;
 
 use enum_dispatch::enum_dispatch;
 use lazy_static::lazy_static;
@@ -43,6 +44,20 @@ pub enum Command {
     HGetAll(HGetAll),
     Unrecognized(Unrecognized),
     Echo(Echo),
+    SisMember(SisMember),
+    AddMember(AddMember),
+}
+
+#[derive(Debug)]
+pub struct SisMember {
+    pub key: String,
+    pub member: String,
+}
+
+#[derive(Debug)]
+pub struct AddMember {
+    pub key: String,
+    pub member: String,
 }
 
 #[derive(Debug)]
@@ -121,6 +136,8 @@ impl TryFrom<RespArray> for Command {
                 b"hmget" => Ok(HMGet::try_from(value)?.into()),
                 b"hset" => Ok(HSet::try_from(value)?.into()),
                 b"hgetall" => Ok(HGetAll::try_from(value)?.into()),
+                b"addmember" => Ok(AddMember::try_from(value)?.into()),
+                b"sismember" => Ok(SisMember::try_from(value)?.into()),
                 _ => Ok(Unrecognized.into()),
             },
             _ => Err(CommandError::InvalidCommand(
