@@ -1,8 +1,4 @@
-use crate::{
-    resp::CRLF_LEN,
-    resp::{extract_fixed_data, extract_simple_frame_data},
-    RespDecode, RespEncode, RespError, RespNullBulkString,
-};
+use crate::{resp::extract_simple_frame_data, resp::CRLF_LEN, RespDecode, RespEncode, RespError};
 use bytes::BytesMut;
 use std::ops::Deref;
 
@@ -46,17 +42,6 @@ impl RespDecode for SimpleString {
     fn expect_length(buf: &[u8]) -> Result<usize, RespError> {
         let end = extract_simple_frame_data(buf, Self::PREFIX)?;
         Ok(end + CRLF_LEN)
-    }
-}
-
-impl RespDecode for RespNullBulkString {
-    const PREFIX: &'static str = "$";
-    fn decode(buf: &mut BytesMut) -> Result<Self, RespError> {
-        extract_fixed_data(buf, "$-1\r\n", "NullBulkString")?;
-        Ok(RespNullBulkString)
-    }
-    fn expect_length(_buf: &[u8]) -> Result<usize, RespError> {
-        Ok(5)
     }
 }
 
