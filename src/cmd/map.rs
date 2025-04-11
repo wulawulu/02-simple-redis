@@ -1,7 +1,7 @@
-use super::{extract_args, validate_command, CommandError, CommandExecutor, Get, Set, RESP_OK};
+use super::{CommandError, CommandExecutor, Get, RESP_OK, Set, extract_args, validate_command};
 use crate::RespArray;
 use crate::RespNull;
-use crate::{backend::Backend, RespFrame};
+use crate::{RespFrame, backend::Backend};
 
 impl CommandExecutor for Get {
     fn execute(self, backend: &Backend) -> RespFrame {

@@ -1,4 +1,4 @@
-use crate::resp::{calc_total_length, extract_fixed_data, parse_length, BUF_CAP, CRLF_LEN};
+use crate::resp::{BUF_CAP, CRLF_LEN, calc_total_length, extract_fixed_data, parse_length};
 use crate::{RespDecode, RespEncode, RespError, RespFrame};
 use bytes::{Buf, BytesMut};
 use std::ops::Deref;

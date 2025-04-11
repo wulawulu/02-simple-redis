@@ -1,6 +1,6 @@
 use crate::{Backend, RespArray, RespFrame};
 
-use super::{extract_args, validate_command, CommandError, CommandExecutor, Echo};
+use super::{CommandError, CommandExecutor, Echo, extract_args, validate_command};
 
 impl CommandExecutor for Echo {
     fn execute(self, _: &Backend) -> RespFrame {

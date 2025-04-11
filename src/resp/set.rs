@@ -1,5 +1,5 @@
 use crate::resp::CRLF_LEN;
-use crate::resp::{calc_total_length, parse_length, BUF_CAP};
+use crate::resp::{BUF_CAP, calc_total_length, parse_length};
 use crate::{RespDecode, RespEncode, RespError, RespFrame};
 use bytes::{Buf, BytesMut};
 use std::ops::Deref;

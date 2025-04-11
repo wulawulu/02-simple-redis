@@ -1,6 +1,6 @@
 use crate::{Backend, RespArray, RespFrame};
 
-use super::{extract_args, validate_command, AddMember, CommandError, CommandExecutor, SisMember};
+use super::{AddMember, CommandError, CommandExecutor, SisMember, extract_args, validate_command};
 
 impl CommandExecutor for AddMember {
     fn execute(self, backend: &Backend) -> RespFrame {

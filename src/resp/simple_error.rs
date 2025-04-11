@@ -1,5 +1,5 @@
-use crate::resp::extract_simple_frame_data;
 use crate::resp::CRLF_LEN;
+use crate::resp::extract_simple_frame_data;
 use crate::{RespDecode, RespEncode, RespError};
 use bytes::BytesMut;
 use std::ops::Deref;

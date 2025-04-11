@@ -137,8 +137,8 @@ fn extract_fixed_data(
 
 #[cfg(test)]
 mod tests {
-    use crate::resp::{calc_total_length, parse_length};
     use crate::RespError;
+    use crate::resp::{calc_total_length, parse_length};
 
     #[test]
     fn test_calc_total_length() -> anyhow::Result<()> {

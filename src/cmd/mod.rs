@@ -9,7 +9,7 @@ use thiserror::Error;
 
 use crate::RespArray;
 use crate::SimpleString;
-use crate::{backend::Backend, RespError, RespFrame};
+use crate::{RespError, RespFrame, backend::Backend};
 
 lazy_static! {
     static ref RESP_OK: RespFrame = SimpleString::from("OK").into();
@@ -128,7 +128,7 @@ impl TryFrom<RespArray> for Command {
 
     fn try_from(value: RespArray) -> Result<Self, Self::Error> {
         match value.first() {
-            Some(RespFrame::BulkString(ref cmd)) => match cmd.as_ref() {
+            Some(RespFrame::BulkString(cmd)) => match cmd.as_ref() {
                 b"echo" => Ok(Echo::try_from(value)?.into()),
                 b"get" => Ok(Get::try_from(value)?.into()),
                 b"set" => Ok(Set::try_from(value)?.into()),
