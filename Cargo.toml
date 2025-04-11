@@ -7,14 +7,14 @@ license = "MIT"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-anyhow = "1.0.94"
-bytes = "1.9.0"
+anyhow = "1.0.97"
+bytes = "1.10.1"
 dashmap = "6.1.0"
 enum_dispatch = "0.3.13"
 futures = { version = "0.3.31", default-features = false }
 lazy_static = "1.5.0"
-thiserror = "2.0.7"
-tokio = { version = "1.42.0", features = ["rt", "rt-multi-thread", "macros", "net"] }
-tokio-util = { version = "0.7.13", features = ["codec"] }
+thiserror = "2.0.12"
+tokio = { version = "1.44.2", features = ["rt", "rt-multi-thread", "macros", "net"] }
+tokio-util = { version = "0.7.14", features = ["codec"] }
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
