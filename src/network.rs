@@ -6,7 +6,7 @@ use tokio_util::codec::{Decoder, Encoder, Framed};
 use tracing::info;
 
 use crate::{
-    Backend, RespDecode, RespEncode, RespError, RespFrame,
+    Backend, RespDecodeV2, RespEncode, RespError, RespFrame,
     cmd::{Command, CommandExecutor},
 };
 

@@ -18,3 +18,4 @@ tokio = { version = "1.44.2", features = ["rt", "rt-multi-thread", "macros", "ne
 tokio-util = { version = "0.7.14", features = ["codec"] }
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
+winnow = { version = "0.7.6", features = ["simd"] }

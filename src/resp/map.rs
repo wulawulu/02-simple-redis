@@ -76,6 +76,12 @@ impl RespDecode for RespMap {
     }
 }
 
+impl From<BTreeMap<String, RespFrame>> for RespMap {
+    fn from(s: BTreeMap<String, RespFrame>) -> Self {
+        RespMap(s)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::{BulkString, RespDecode, RespEncode, RespFrame, RespMap};

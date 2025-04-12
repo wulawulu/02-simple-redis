@@ -65,6 +65,12 @@ impl RespDecode for RespArray {
     }
 }
 
+impl From<Vec<RespFrame>> for RespArray {
+    fn from(s: Vec<RespFrame>) -> Self {
+        RespArray(s)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::{BulkString, RespArray, RespDecode, RespEncode, RespError, RespFrame};
