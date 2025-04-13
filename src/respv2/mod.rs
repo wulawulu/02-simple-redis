@@ -1,9 +1,10 @@
 use bytes::BytesMut;
-use tracing::warn;
 
 use crate::{RespError, RespFrame};
 
 mod parse;
+
+pub use self::parse::{parse_frame, parse_frame_length};
 
 pub trait RespDecodeV2: Sized {
     fn decode(buf: &mut BytesMut) -> Result<Self, RespError>;
@@ -12,7 +13,6 @@ pub trait RespDecodeV2: Sized {
 
 impl RespDecodeV2 for RespFrame {
     fn decode(buf: &mut BytesMut) -> Result<Self, RespError> {
-        warn!("decode");
         let len = Self::expect_length(buf)?;
         let data = buf.split_to(len);
         parse::parse_frame(&mut data.as_ref()).map_err(|e| RespError::InvalidFrame(e.to_string()))

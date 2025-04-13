@@ -1,8 +1,10 @@
+use std::num::NonZeroUsize;
+
 use winnow::{
     Parser,
     ascii::{digit1, float},
     combinator::{alt, dispatch, fail, opt, preceded, terminated},
-    error::ContextError,
+    error::{ContextError, Needed, ParserError},
     token::{any, take, take_till, take_until},
 };
 
@@ -53,7 +55,13 @@ fn bulk_string_advance(input: &mut &[u8]) -> Result<()> {
     } else if len < 0 {
         return Err(err_cut("bulk string length must be non-negative"));
     }
-    terminated(take(len as usize), CRLF).parse_next(input)?;
+    // we don't really need to parse the data, just advance the pointer
+    let len_with_crlf = len as usize + 2;
+    if input.len() < len_with_crlf {
+        let size = NonZeroUsize::new((len_with_crlf - input.len()) as usize).unwrap();
+        return Err(ContextError::incomplete(input, Needed::Size(size)));
+    }
+    *input = &input[len_with_crlf..];
     Ok(())
 }
 
